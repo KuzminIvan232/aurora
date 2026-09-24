@@ -1,46 +1,55 @@
 /**
- * Sample React Native App
+* Sample React Native App
  * https://github.com/facebook/react-native
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from '@navigation/stacks/app';
+import { navigationRef } from '@navigation/navigationUtils';
+import { useEffect } from 'react';
+import { incrementLaunchCount } from '@services/appStats';
+import { ActivityIndicator, View } from 'react-native';
+import { colors } from '@utils/colors';
+import { linking } from '@navigation/deepLinking';
+import FlashMessage from 'react-native-flash-message';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+function FallbackLoader() {
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-      <Text>Hello, World!</Text>
+    <View style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.background,
+    }}>
+      <ActivityIndicator size="large" color={colors.muted} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default function App() {
+  useEffect(() => {
+    incrementLaunchCount();
+  }, []);
 
-export default App;
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <NavigationContainer
+            ref={navigationRef}
+            linking={linking}
+            fallback={<FallbackLoader />}
+          >
+            <AppNavigator />
+          </NavigationContainer>
+          <FlashMessage position="top" duration={2500} />
+        </BottomSheetModalProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
