@@ -3,10 +3,10 @@ import {
     Text,
     View,
     Pressable,
-    Image,
     StyleSheet,
 } from 'react-native';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withSpring, withTiming } from 'react-native-reanimated';
 
 import LinearGradient from 'react-native-linear-gradient';
 import { SvgProps } from 'react-native-svg';
@@ -31,18 +31,45 @@ function Profile({ name, subtitle, avatar, metrics, onPress, onLogout, userId }:
     const styles = useMemo(() => makeStyles(colors), [colors]);
     const { t } = useTranslation();
 
+    // Entrance: avatar slides/fades in first, the name+subtitle block
+    // follows 150ms later — both run on the UI thread via withTiming.
+    const avatarProgress = useSharedValue(0);
+    const textProgress = useSharedValue(0);
+    const addCourseScale = useSharedValue(1);
+
+    useEffect(() => {
+        avatarProgress.value = withTiming(1, { duration: 300 });
+        textProgress.value = withDelay(150, withTiming(1, { duration: 300 }));
+    }, [avatarProgress, textProgress]);
+
+    const avatarStyle = useAnimatedStyle(() => ({
+        opacity: avatarProgress.value,
+        transform: [{ translateY: (1 - avatarProgress.value) * 20 }],
+    }));
+
+    const textStyle = useAnimatedStyle(() => ({
+        opacity: textProgress.value,
+        transform: [{ translateY: (1 - textProgress.value) * 20 }],
+    }));
+
+    const addCourseStyle = useAnimatedStyle(() => ({
+        transform: [{ scale: addCourseScale.value }],
+    }));
+
     return (
         <View style={styles.root}>
             <LinearGradient colors={[colors.background, colors.profileGradientEnd]} style={StyleSheet.absoluteFill} />
             <View style={styles.firstSection}>
-                <Image
+                <Animated.Image
                     source={{ uri: avatar }}
-                    style={styles.image}
+                    style={[styles.image, avatarStyle]}
                 />
-                <GradientText style={styles.name} colors={[colors.primary, colors.accent]}>
-                    {name}
-                </GradientText>
-                <Text style={styles.subtitle}>{subtitle}</Text>
+                <Animated.View style={[styles.textGroup, textStyle]}>
+                    <GradientText style={styles.name} colors={[colors.primary, colors.accent]}>
+                        {name}
+                    </GradientText>
+                    <Text style={styles.subtitle}>{subtitle}</Text>
+                </Animated.View>
             </View>
             <View style={styles.metrics}>
                 {metrics.map((item) => {
@@ -60,21 +87,26 @@ function Profile({ name, subtitle, avatar, metrics, onPress, onLogout, userId }:
             <View style={styles.thirdSection}>
                 <Text style={styles.userId}>User Id: {userId}</Text>
                 <View style={styles.buttons}>
-                    <View style={styles.cardShadow}>
+                    <Animated.View style={[styles.cardShadow, addCourseStyle]}>
                         <View style={styles.card}>
                             <LinearGradient
                                 colors={[colors.background, colors.cardGradientEnd]}
                                 style={StyleSheet.absoluteFill}
                                 locations={[0.3, 1]}
                             />
-                            <Pressable onPress={onPress} style={({ pressed }) => [
-                                styles.button,
-                                pressed && styles.buttonPressed
-                            ]}>
+                            <Pressable
+                                onPress={onPress}
+                                onPressIn={() => { addCourseScale.value = withSpring(0.92); }}
+                                onPressOut={() => { addCourseScale.value = withSpring(1); }}
+                                style={({ pressed }) => [
+                                    styles.button,
+                                    pressed && styles.buttonPressed
+                                ]}
+                            >
                                 <Text style={styles.addCourse}>Add course</Text>
                             </Pressable>
                         </View>
-                    </View>
+                    </Animated.View>
                     <View style={styles.cardShadow}>
                         <View style={styles.card}>
                             <LinearGradient

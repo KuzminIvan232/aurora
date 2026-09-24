@@ -26,6 +26,11 @@ export const makeStyles = (colors: Colors) => {
             fontSize: 18,
             color: colors.muted,
         },
+        biometricRow: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+        },
         row: {
             fontFamily: 'Manrope-Medium',
             fontSize: 16,

@@ -15,6 +15,9 @@ export const makeStyles = (colors: Colors) => {
         firstSection: {
             alignItems: 'center',
         },
+        textGroup: {
+            alignItems: 'center',
+        },
         image: {
             width: AVATAR,
             height: AVATAR,

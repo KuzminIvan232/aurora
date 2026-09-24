@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { PrivateStackParamList } from "@interfaces/navigation";
@@ -10,6 +10,13 @@ import {
     BottomSheetBackdrop,
     BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
+import Animated, {
+    Extrapolation,
+    interpolate,
+    useAnimatedScrollHandler,
+    useAnimatedStyle,
+    useSharedValue,
+} from 'react-native-reanimated';
 import { makeStyles } from './styles';
 import { observer } from 'mobx-react-lite';
 import { useTheme } from "@hooks/useTheme";
@@ -42,6 +49,20 @@ function DashboardScreen() {
     const styles = useMemo(() => makeStyles(colors), [colors]);
     const { t } = useTranslation();
 
+    // Header shrinks as the list scrolls: scrollY is updated on the UI
+    // thread by the scroll handler, titleStyle reads it via interpolate.
+    const scrollY = useSharedValue(0);
+    const scrollHandler = useAnimatedScrollHandler({
+        onScroll: (event) => {
+            scrollY.value = event.contentOffset.y;
+        },
+    });
+
+    const titleStyle = useAnimatedStyle(() => {
+        const scale = interpolate(scrollY.value, [0, 100], [1, 0.7], Extrapolation.CLAMP);
+        return { transform: [{ scale }] };
+    });
+
     const handleGoToProfile = () => {
         navigation.navigate('Profile', { userId: 'user1' });
     }
@@ -60,13 +81,15 @@ function DashboardScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Dashboard</Text>
+            <Animated.Text style={[styles.title, titleStyle]}>Dashboard</Animated.Text>
             <Text style={styles.subtitle}>{t('courses', { count: COURSES.length })}</Text>
-            <FlatList
+            <Animated.FlatList
                 style={styles.list}
                 data={COURSES}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
+                keyExtractor={(item: Course) => item.id}
+                onScroll={scrollHandler}
+                scrollEventThrottle={16}
+                renderItem={({ item }: { item: Course }) => (
                     <Pressable style={styles.courseRow} onPress={() => handleOpenCourse(item)}>
                         <Text style={styles.courseTitle}>{item.title}</Text>
                         <Badge label={`${item.lessons} lessons`} />

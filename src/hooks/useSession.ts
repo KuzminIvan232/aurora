@@ -8,6 +8,8 @@ import { setThemeMode } from '@store/theme/actions';
 import { loadLang } from '@services/localeStorage';
 import { setLang } from '@store/locale/actions';
 import { initLocalization } from '@localization/index';
+import { loadBiometricsEnabled } from '@services/biometricStorage';
+import { requireBiometricSignature, BiometricError } from '@services/biometrics';
 
 export function useSession() {
     const [session, setSession] = useState<Session | null>(null);
@@ -23,6 +25,25 @@ export function useSession() {
 
             try {
                 const restored = await restoreSession();
+
+                if (await loadBiometricsEnabled()) {
+                    try {
+                        await requireBiometricSignature();
+                    } catch (error) {
+                        await clearSession();
+                        setSession(null);
+                        replace('PublicStack');
+                        showMessage({
+                            message: 'Біометрія',
+                            description: error instanceof BiometricError
+                                ? error.message
+                                : 'Не вдалося підтвердити біометрію',
+                            type: 'warning',
+                        });
+                        return;
+                    }
+                }
+
                 setSession(restored);
                 replace('PrivateStack');
             } catch {

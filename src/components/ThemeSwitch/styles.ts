@@ -12,22 +12,19 @@ export const makeStyles = (colors: Colors) => {
         },
         option: {
             flex: 1,
+        },
+        optionFill: {
             paddingVertical: 10,
             alignItems: 'center',
             borderRadius: 9,
         },
-        optionActive: {
-            backgroundColor: colors.accent,
-        },
         label: {
             fontFamily: 'Manrope-Medium',
             fontSize: 14,
-            color: colors.muted,
         },
         labelActive: {
             fontFamily: 'Manrope-Bold',
             fontSize: 14,
-            color: colors.background,
         },
     });
 };
