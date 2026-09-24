@@ -9,6 +9,7 @@ export type PublicStackParamList = {
 export type PrivateStackParamList = {
     Dashboard: undefined;
     Profile: { userId: string };
+    Settings: undefined;
 }
 
 export type AppStackParamList = {

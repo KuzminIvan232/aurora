@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, Text } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { PrivateStackParamList } from "@interfaces/navigation";
@@ -13,6 +13,8 @@ import {
 import { makeStyles } from './styles';
 import { observer } from 'mobx-react-lite';
 import { useTheme } from "@hooks/useTheme";
+import { useTranslation } from 'react-i18next';
+import Badge from '@components/Badge';
 
 type DashboardNavProp = NativeStackNavigationProp<PrivateStackParamList, 'Dashboard'>
 
@@ -38,6 +40,7 @@ function DashboardScreen() {
     const snapPoints = useMemo(() => ['40%', '85%'], []);
     const { colors } = useTheme();
     const styles = useMemo(() => makeStyles(colors), [colors]);
+    const { t } = useTranslation();
 
     const handleGoToProfile = () => {
         navigation.navigate('Profile', { userId: 'user1' });
@@ -58,6 +61,7 @@ function DashboardScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Dashboard</Text>
+            <Text style={styles.subtitle}>{t('courses', { count: COURSES.length })}</Text>
             <FlatList
                 style={styles.list}
                 data={COURSES}
@@ -65,7 +69,7 @@ function DashboardScreen() {
                 renderItem={({ item }) => (
                     <Pressable style={styles.courseRow} onPress={() => handleOpenCourse(item)}>
                         <Text style={styles.courseTitle}>{item.title}</Text>
-                        <Text style={styles.courseLessons}>{item.lessons} lessons</Text>
+                        <Badge label={`${item.lessons} lessons`} />
                     </Pressable>
                 )}
             />
@@ -82,7 +86,11 @@ function DashboardScreen() {
             >
                 <BottomSheetView style={styles.sheetContent}>
                     <Text style={styles.sheetTitle}>{selectedCourse?.title}</Text>
-                    <Text style={styles.sheetLessons}>{selectedCourse?.lessons} lessons</Text>
+                    {selectedCourse && (
+                        <View style={styles.sheetBadge}>
+                            <Badge label={`${selectedCourse.lessons} lessons`} />
+                        </View>
+                    )}
                     <Text style={styles.sheetDescription}>{selectedCourse?.description}</Text>
                 </BottomSheetView>
             </BottomSheetModal>

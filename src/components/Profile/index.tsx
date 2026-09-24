@@ -14,6 +14,7 @@ import { makeStyles } from './styles';
 import { ProfileProps } from './types';
 import { useTheme } from '@hooks/useTheme';
 import { observer } from 'mobx-react-lite';
+import { useTranslation } from 'react-i18next';
 import GradientText from '@components/GradientText';
 import GraduationCap from '@icons/graduation-cap.svg';
 import Clock4 from '@icons/clock-4.svg';
@@ -28,6 +29,7 @@ const METRIC_ICONS: Record<string, React.FC<SvgProps>> = {
 function Profile({ name, subtitle, avatar, metrics, onPress, onLogout, userId }: ProfileProps) {
     const { colors } = useTheme();
     const styles = useMemo(() => makeStyles(colors), [colors]);
+    const { t } = useTranslation();
 
     return (
         <View style={styles.root}>
@@ -84,7 +86,7 @@ function Profile({ name, subtitle, avatar, metrics, onPress, onLogout, userId }:
                                 styles.button,
                                 pressed && styles.buttonPressed
                             ]}>
-                                <Text style={styles.addCourse}>Log out</Text>
+                                <Text style={styles.addCourse}>{t('common.logout')}</Text>
                             </Pressable>
                         </View>
                     </View>

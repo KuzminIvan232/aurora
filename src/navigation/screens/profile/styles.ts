@@ -7,17 +7,20 @@ export const makeStyles = (colors: Colors) => {
             flex: 1,
         },
         container: {
-            flex: 1,
             padding: 24,
+            paddingBottom: 40,
         },
-        themeSection: {
+        button: {
+            backgroundColor: colors.section,
+            padding: 12,
+            borderRadius: 12,
+            alignItems: 'center',
             marginTop: 24,
-            gap: 8,
         },
-        sectionTitle: {
+        buttonLabel: {
             fontFamily: 'Manrope-Medium',
-            fontSize: 14,
-            color: colors.muted,
+            fontSize: 16,
+            color: colors.primary,
         },
     });
 };

@@ -3,29 +3,28 @@ import { useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { makeStyles } from './styles';
 import { useTheme } from '@hooks/useTheme';
-import { themeStore, ThemeMode } from '@store/theme/state';
-import { setThemeMode } from '@store/theme/actions';
+import { localeStore, Lang } from '@store/locale/state';
+import { setLang } from '@store/locale/actions';
 
-const OPTIONS: { mode: ThemeMode; label: string }[] = [
-    { mode: 'light', label: 'light' },
-    { mode: 'dark', label: 'Dark' },
-    { mode: 'system', label: 'System' },
+const OPTIONS: { lang: Lang; label: string }[] = [
+    { lang: 'en', label: 'English' },
+    { lang: 'uk', label: 'Українська' },
 ];
 
-function ThemeSwitch() {
+function LangSwitch() {
     const { colors } = useTheme();
     const styles = useMemo(() => makeStyles(colors), [colors]);
 
     return (
         <View style={styles.track}>
             {OPTIONS.map((option) => {
-                const isActive = option.mode === themeStore.mode;
+                const isActive = option.lang === localeStore.lang;
 
                 return (
                     <Pressable
-                        key={option.mode}
+                        key={option.lang}
                         style={[styles.option, isActive && styles.optionActive]}
-                        onPress={() => setThemeMode(option.mode)}
+                        onPress={() => setLang(option.lang)}
                     >
                         <Text style={isActive ? styles.labelActive : styles.label}>
                             {option.label}
@@ -37,4 +36,4 @@ function ThemeSwitch() {
     );
 }
 
-export default observer(ThemeSwitch);
+export default observer(LangSwitch);

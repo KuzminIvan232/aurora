@@ -17,9 +17,16 @@ export const makeStyles = (colors: Colors) => {
         },
         title: {
             color: colors.primary,
-            marginBottom: 24,
+            marginBottom: 8,
             fontFamily: 'manrope-bold',
             fontSize: 48,
+            alignSelf: 'center',
+        },
+        subtitle: {
+            color: colors.muted,
+            marginBottom: 24,
+            fontFamily: 'Manrope-Medium',
+            fontSize: 16,
             alignSelf: 'center',
         },
         list: {
@@ -35,12 +42,7 @@ export const makeStyles = (colors: Colors) => {
             color: colors.primary,
             fontFamily: 'Manrope-Bold',
             fontSize: 18,
-        },
-        courseLessons: {
-            color: colors.muted,
-            fontFamily: 'Manrope-Regular',
-            fontSize: 14,
-            marginTop: 4,
+            marginBottom: 8,
         },
         sheetBackground: {
             backgroundColor: colors.background,
@@ -57,11 +59,8 @@ export const makeStyles = (colors: Colors) => {
             fontFamily: 'Manrope-Bold',
             fontSize: 28,
         },
-        sheetLessons: {
-            color: colors.muted,
-            fontFamily: 'Manrope-Medium',
-            fontSize: 16,
-            marginTop: 4,
+        sheetBadge: {
+            marginTop: 8,
             marginBottom: 16,
         },
         sheetDescription: {

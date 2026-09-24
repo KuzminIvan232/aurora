@@ -5,6 +5,9 @@ import BootSplash from 'react-native-bootsplash';
 import { showMessage } from 'react-native-flash-message';
 import { loadThemeMode } from '@services/themeStorage';
 import { setThemeMode } from '@store/theme/actions';
+import { loadLang } from '@services/localeStorage';
+import { setLang } from '@store/locale/actions';
+import { initLocalization } from '@localization/index';
 
 export function useSession() {
     const [session, setSession] = useState<Session | null>(null);
@@ -13,6 +16,10 @@ export function useSession() {
     useEffect(() => {
         async function initSession() {
             setThemeMode(await loadThemeMode());
+
+            const lang = await loadLang();
+            await initLocalization(lang);
+            setLang(lang);
 
             try {
                 const restored = await restoreSession();

@@ -4,6 +4,7 @@ import type { PrivateStackParamList } from '@interfaces/navigation';
 
 import DashboardScreen from '../screens/dashboard';
 import ProfileScreen from '../screens/profile';
+import SettingsScreen from '../screens/settings';
 
 const Stack = createNativeStackNavigator<PrivateStackParamList>();
 
@@ -15,6 +16,7 @@ export default function PrivateNavigator() {
         >
             <Stack.Screen name="Dashboard" component={DashboardScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
         </Stack.Navigator>
     );
 }

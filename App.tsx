@@ -18,6 +18,15 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useTheme } from '@hooks/useTheme';
 import { observer } from 'mobx-react-lite';
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { lightColors } from '@utils/colors';
+
+EStyleSheet.build({
+  $primary: lightColors.primary,
+  $background: lightColors.background,
+  $accent: lightColors.accent,
+  $rem: 16,
+});
 
 const FallbackLoader = observer(function () {
   const { colors } = useTheme();
