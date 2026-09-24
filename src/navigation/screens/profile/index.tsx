@@ -1,5 +1,5 @@
 
-import { StatusBar, View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,6 +9,7 @@ import { clearSession } from '@services/session';
 import { replace } from '@navigation/navigationUtils';
 import { makeStyles } from './styles';
 import Profile from '@components/Profile';
+import ThemeSwitch from '@components/ThemeSwitch';
 import { useTheme } from '@hooks/useTheme';
 import { observer } from 'mobx-react-lite';
 import { showMessage } from 'react-native-flash-message';
@@ -19,7 +20,7 @@ function ProfileScreen() {
     const route = useRoute<ProfileRouteProp>();
     const { userId } = route.params;
 
-    const { colors, isDark } = useTheme();
+    const { colors } = useTheme();
     const styles = useMemo(() => makeStyles(colors), [colors]);
     const [courses, setCourses] = useState(0);
 
@@ -36,7 +37,6 @@ function ProfileScreen() {
         <View style={styles.root}>
             <LinearGradient colors={[colors.background, colors.screenGradientEnd]} style={StyleSheet.absoluteFill} />
             <SafeAreaView style={styles.container}>
-                <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
                 <Profile
                     name='Ivan Kuzmin'
                     subtitle='FrontEnd Developer'
@@ -50,6 +50,10 @@ function ProfileScreen() {
                     onLogout={handleLogout}
                     userId={userId}
                 />
+                <View style={styles.themeSection}>
+                    <Text style={styles.sectionTitle}>Тема</Text>
+                    <ThemeSwitch />
+                </View>
             </SafeAreaView>
         </View>
     )

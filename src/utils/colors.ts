@@ -2,6 +2,7 @@
 export const lightColors = {
     background: 'rgb(245, 227, 198)',
     section: 'rgb(220, 203, 175)',
+    border: 'rgb(196, 173, 140)',
     primary: 'rgb(52, 42, 25)',
     muted: 'rgba(52, 42, 25, 0.6)',
     screenGradientEnd: 'rgb(224, 206, 178)',
@@ -13,7 +14,8 @@ export const lightColors = {
 
 export const darkColors: typeof lightColors = {
     background: 'rgb(28, 22, 15)',
-    section: 'rgb(44, 36, 25)',
+    section: 'rgb(69, 55, 37)',
+    border: 'rgb(120, 100, 72)',
     primary: 'rgb(240, 227, 210)',
     muted: 'rgba(240, 227, 210, 0.6)',
     screenGradientEnd: 'rgb(38, 30, 20)',
@@ -24,7 +26,3 @@ export const darkColors: typeof lightColors = {
 };
 
 export type Colors = typeof lightColors;
-
-// Temporary alias until theme switching lands — everything still reads
-// `colors` directly. Swap this for a `useColorScheme()`-driven pick then.
-export const colors: Colors = lightColors;

@@ -62,7 +62,8 @@ export const makeStyles = (colors: Colors) => {
         },
         addCourse: {
             fontFamily: 'Manrope-Medium',
-            fontSize: 16
+            fontSize: 16,
+            color: colors.primary,
         },
         cardShadow: {
             borderRadius: 12,
@@ -86,7 +87,7 @@ export const makeStyles = (colors: Colors) => {
         },
         userId: {
             fontSize: 18,
-            color: colors.background
+            color: colors.muted
         }
     });
 };

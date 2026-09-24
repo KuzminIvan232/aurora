@@ -12,8 +12,6 @@ import {
 } from "@gorhom/bottom-sheet";
 import { makeStyles } from './styles';
 import { observer } from 'mobx-react-lite';
-import { themeStore } from '@store/theme/state';
-import { setThemeMode } from '@store/theme/actions';
 import { useTheme } from "@hooks/useTheme";
 
 type DashboardNavProp = NativeStackNavigationProp<PrivateStackParamList, 'Dashboard'>
@@ -71,14 +69,6 @@ function DashboardScreen() {
                     </Pressable>
                 )}
             />
-            <Text>Mode: {themeStore.mode}</Text>
-            <Pressable onPress={() => setThemeMode('dark')}>
-                <Text>dark</Text>
-            </Pressable>
-            <Pressable onPress={() => setThemeMode('light')}>
-                <Text>light</Text>
-            </Pressable>
-
             <Pressable style={styles.button} onPress={handleGoToProfile}>
                 <Text>Go to Profile</Text>
             </Pressable>

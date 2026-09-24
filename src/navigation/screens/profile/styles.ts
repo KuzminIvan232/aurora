@@ -10,5 +10,14 @@ export const makeStyles = (colors: Colors) => {
             flex: 1,
             padding: 24,
         },
+        themeSection: {
+            marginTop: 24,
+            gap: 8,
+        },
+        sectionTitle: {
+            fontFamily: 'Manrope-Medium',
+            fontSize: 14,
+            color: colors.muted,
+        },
     });
 };

@@ -6,19 +6,22 @@
  */
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import AppNavigator from '@navigation/stacks/app';
 import { navigationRef } from '@navigation/navigationUtils';
 import { useEffect } from 'react';
 import { incrementLaunchCount } from '@services/appStats';
-import { ActivityIndicator, View } from 'react-native';
-import { colors } from '@utils/colors';
+import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { linking } from '@navigation/deepLinking';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useTheme } from '@hooks/useTheme';
+import { observer } from 'mobx-react-lite';
 
-function FallbackLoader() {
+const FallbackLoader = observer(function () {
+  const { colors } = useTheme();
+
   return (
     <View style={{
       flex: 1,
@@ -29,9 +32,11 @@ function FallbackLoader() {
       <ActivityIndicator size="large" color={colors.muted} />
     </View>
   );
-}
+});
 
-export default function App() {
+function App() {
+  const { isDark } = useTheme();
+
   useEffect(() => {
     incrementLaunchCount();
   }, []);
@@ -40,10 +45,12 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
+          <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
           <NavigationContainer
             ref={navigationRef}
             linking={linking}
             fallback={<FallbackLoader />}
+            theme={isDark ? DarkTheme : DefaultTheme}
           >
             <AppNavigator />
           </NavigationContainer>
@@ -53,3 +60,5 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+
+export default observer(App);

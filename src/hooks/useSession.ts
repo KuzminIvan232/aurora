@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { replace } from '@navigation/navigationUtils';
 import BootSplash from 'react-native-bootsplash';
 import { showMessage } from 'react-native-flash-message';
+import { loadThemeMode } from '@services/themeStorage';
+import { setThemeMode } from '@store/theme/actions';
 
 export function useSession() {
     const [session, setSession] = useState<Session | null>(null);
@@ -10,6 +12,8 @@ export function useSession() {
 
     useEffect(() => {
         async function initSession() {
+            setThemeMode(await loadThemeMode());
+
             try {
                 const restored = await restoreSession();
                 setSession(restored);

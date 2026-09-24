@@ -24,6 +24,7 @@ export const makeStyles = (colors: Colors) => {
             fontFamily: 'Manrope-regulsr',
             fontSize: 18,
             marginBottom: 24,
+            color: colors.primary
         },
     });
 };
